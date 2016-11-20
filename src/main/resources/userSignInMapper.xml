@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tan.dao.UserSignInMapper">
+
+<!--注册时：手机号及密码 -->
+ <insert id="insertUserSignIn1" parameterType="com.tan.model.UserSignIn" useGeneratedKeys="true" keyProperty="id">
+  insert into hy_userSignIn(signin_phonenumber,signin_pwd,signin_isLogin) values (#{phonenumber},#{pwd},#{isLogin})
+</insert>
+
+<!--注册时：用户信息 -->
+<insert id="insertUserInfo1" parameterType="com.tan.model.UserInfo" useGeneratedKeys="true" keyProperty="id">
+ insert into hy_userinfo(userinfo_userId,userinfo_nickname,userinfo_sex,userinfo_singleOrdouble,userinfo_birthday,userinfo_hometown,userinfo_city,userinfo_job,userinfo_heading) VALUES (#{user_id},#{nickname},#{sex},#{singleOrdouble},#{birthday},#{hometown},#{city},#{job},#{heading})
+</insert>
+
+
+<!-- 
+    方式一：嵌套结果：使用嵌套结果映射来处理重复的联合结果的子集
+              封装联表查询的数据(去除重复的数据)
+         select * from class c, teacher t where c.teacher_id=t.t_id and c.c_id=1         
+         select * from class c, teacher t where c.teacher_id=t.t_id and c.c_id=#{id}
+     -->
+    <select id="getUserByphoneAndPwd" parameterType="com.tan.model.UserSignIn" resultMap="UsersResultMap">
+         SELECT * FROM hy_userSignIn a,hy_userinfo b WHERE a.signin_id=b.userinfo_userId AND signin_phonenumber= #{phonenumber}  AND signin_pwd=#{pwd}
+     </select> 
+     <!-- 使用resultMap映射实体类和字段之间的一一对应关系 -->
+      <resultMap type="com.tan.model.UserSignIn" id="UsersResultMap">
+         <id property="id" column="signin_id"/>
+         <id property="phonenumber" column="signin_phonenumber"/>
+         <id property="pwd" column="signin_pwd"/>
+         <result property="phonenumber" column="signin_phonenumber"/>
+         <result property="pwd" column="pwd"/>
+         <association property="userInfo" javaType="com.tan.model.UserInfo">
+             <id property="id" column="userinfo_userId"/>
+             <result property="user_id" column="userinfo_userId"/>
+             <result property="nickname" column="userinfo_nickname"/>
+             <result property="sex" column="userinfo_sex"/>
+             <result property="singleOrdouble" column="userinfo_singleOrdouble"/>
+             <result property="birthday" column="userinfo_birthday"/>
+             <result property="hometown" column="userinfo_hometown"/>
+             <result property="city" column="userinfo_city"/>
+             <result property="job" column="userinfo_job"/>
+             <result property="heading" column="userinfo_heading"/>
+         </association>
+     </resultMap>
+
+
+
+
+ <!--    <select id="getAllUser" parameterType="com.tan.model.UserSignIn" resultMap="AllUsersResultMap">
+         SELECT * FROM hy_userSignIn a,hy_userinfo b WHERE a.signin_id=b.userinfo_userId
+     </select> 
+     使用resultMap映射实体类和字段之间的一一对应关系
+      <resultMap type="com.tan.model.UserSignIn" id="AllUsersResultMap">
+         <id property="id" column="signin_id"/>
+         <id property="phonenumber" column="signin_phonenumber"/>
+         <id property="pwd" column="signin_pwd"/>
+         <result property="phonenumber" column="signin_phonenumber"/>
+         <result property="pwd" column="pwd"/>
+         <association property="userInfo" javaType="com.tan.model.UserInfo">
+             <id property="id" column="userinfo_userId"/>
+             <result property="user_id" column="userinfo_userId"/>
+             <result property="nickname" column="userinfo_nickname"/>
+             <result property="sex" column="userinfo_sex"/>
+             <result property="singleOrdouble" column="userinfo_singleOrdouble"/>
+             <result property="birthday" column="userinfo_birthday"/>
+             <result property="hometown" column="userinfo_hometown"/>
+             <result property="city" column="userinfo_city"/>
+             <result property="job" column="userinfo_job"/>
+             <result property="heading" column="userinfo_heading"/>
+         </association>
+     </resultMap> -->
+
+
+   <select id="getAllUser" parameterType="com.tan.model.UserSignIn" resultMap="AllUsersResultMap">
+         SELECT *,DATE_FORMAT(b.userinfo_birthday,"%Y-%m-%d") as birthdayStr FROM hy_userSignIn a,hy_userinfo b WHERE a.signin_id=b.userinfo_userId
+     </select> 
+     <!-- 使用resultMap映射实体类和字段之间的一一对应关系 -->
+      <resultMap type="com.tan.model.UserSignIn" id="AllUsersResultMap">
+         <id property="id" column="signin_id"/>
+        <!--  <id property="phonenumber" column="signin_phonenumber"/>
+         <id property="pwd" column="signin_pwd"/> -->
+         <result property="phonenumber" column="signin_phonenumber"/>
+         <result property="pwd" column="pwd"/>
+         <association property="userInfo" javaType="com.tan.model.UserInfo">
+             <id property="id" column="userinfo_userId"/>
+             <result property="user_id" column="userinfo_userId"/>
+             <result property="nickname" column="userinfo_nickname"/>
+             <result property="sex" column="userinfo_sex"/>
+             <result property="singleOrdouble" column="userinfo_singleOrdouble"/>
+             <result property="birthdayStr" column="birthdayStr"/>
+             <result property="hometown" column="userinfo_hometown"/>
+             <result property="city" column="userinfo_city"/>
+             <result property="job" column="userinfo_job"/>
+             <result property="heading" column="userinfo_heading"/>
+         </association>
+     </resultMap>
+     
+     <!-- 从m开始，取n条   SELECT *,DATE_FORMAT(b.userinfo_birthday,"%Y-%m-%d")  FROM hy_userSignIn a,hy_userinfo b WHERE a.signin_id=b.userinfo_userId ORDER BY b.`userinfo_userId` DESC LIMIT #{offset},#{limit} -->
+     <select id="getAllUserLimit" parameterType="com.tan.model.UserSignIn" resultMap="AllUsersBylimitResultMap">       
+       SELECT *,DATE_FORMAT(b.userinfo_birthday,"%Y-%m-%d") birthdayStr  FROM hy_userSignIn a,hy_userinfo b WHERE a.signin_id=b.userinfo_userId ORDER BY b.`userinfo_userId` asc LIMIT #{offset},#{limit}
+     </select> 
+     <!-- 使用resultMap映射实体类和字段之间的一一对应关系 -->
+      <resultMap type="com.tan.model.UserSignIn" id="AllUsersBylimitResultMap">
+         <id property="id" column="signin_id"/>
+        <!--  <id property="phonenumber" column="signin_phonenumber"/>
+         <id property="pwd" column="signin_pwd"/> -->
+         <id property="pwd" column="m"/>
+         <result property="phonenumber" column="signin_phonenumber"/>
+         <result property="pwd" column="pwd"/>
+         <association property="userInfo" javaType="com.tan.model.UserInfo">
+             <id property="id" column="userinfo_userId"/>
+             <result property="user_id" column="userinfo_userId"/>
+             <result property="nickname" column="userinfo_nickname"/>
+             <result property="sex" column="userinfo_sex"/>
+             <result property="singleOrdouble" column="userinfo_singleOrdouble"/>
+             <result property="birthdayStr" column="birthdayStr"/>
+             <result property="hometown" column="userinfo_hometown"/>
+             <result property="city" column="userinfo_city"/>
+             <result property="job" column="userinfo_job"/>
+             <result property="heading" column="userinfo_heading"/>
+         </association>
+     </resultMap>
+     
+     
+     
+      <!-- 从m开始，取n条   SELECT *,DATE_FORMAT(b.userinfo_birthday,"%Y-%m-%d")  FROM hy_userSignIn a,hy_userinfo b WHERE a.signin_id=b.userinfo_userId ORDER BY b.`userinfo_userId` DESC LIMIT #{offset},#{limit} -->
+     <select id="getUserInfo" parameterType="com.tan.model.UserSignIn" resultMap="UsersInfoByIdResultMap">       
+       SELECT *,DATE_FORMAT(b.userinfo_birthday,"%Y-%m-%d") birthdayStr  FROM hy_userSignIn a,hy_userinfo b WHERE a.signin_id=b.userinfo_userId and b.userinfo_userId=#{userid}
+     </select> 
+     <!-- 使用resultMap映射实体类和字段之间的一一对应关系 -->
+      <resultMap type="com.tan.model.UserSignIn" id="UsersInfoByIdResultMap">
+         <id property="id" column="signin_id"/>
+        <!--  <id property="phonenumber" column="signin_phonenumber"/>
+         <id property="pwd" column="signin_pwd"/> -->
+         <id property="pwd" column="m"/>
+         <result property="phonenumber" column="signin_phonenumber"/>
+         <result property="pwd" column="pwd"/>
+         <association property="userInfo" javaType="com.tan.model.UserInfo">
+             <id property="id" column="userinfo_userId"/>
+             <result property="user_id" column="userinfo_userId"/>
+             <result property="nickname" column="userinfo_nickname"/>
+             <result property="sex" column="userinfo_sex"/>
+             <result property="singleOrdouble" column="userinfo_singleOrdouble"/>
+             <result property="birthdayStr" column="birthdayStr"/>
+             <result property="hometown" column="userinfo_hometown"/>
+             <result property="city" column="userinfo_city"/>
+             <result property="job" column="userinfo_job"/>
+             <result property="heading" column="userinfo_heading"/>
+         </association>
+     </resultMap>
+ 
+ 
+   <!-- 获取用户的好友-->
+   <select id="getUserfriend" parameterType="com.tan.model.UserSignIn" resultMap="UserfriendBylimitResultMap">       
+        SELECT *,DATE_FORMAT(b.userinfo_birthday,"%Y-%m-%d") birthdayStr  FROM hy_userSignIn a,hy_userinfo b WHERE a.signin_id=b.userinfo_userId AND b.`userinfo_userId` 
+        IN(SELECT fridendship_friendid FROM hy_friendship WHERE fridendship_userid=#{userid})
+        ORDER BY b.userinfo_userId asc LIMIT #{offset},#{limit}
+     </select> 
+     <!-- 使用resultMap映射实体类和字段之间的一一对应关系 -->
+      <resultMap type="com.tan.model.UserSignIn" id="UserfriendBylimitResultMap">
+         <id property="id" column="signin_id"/>
+        <!--  <id property="phonenumber" column="signin_phonenumber"/>
+         <id property="pwd" column="signin_pwd"/> -->
+         <id property="pwd" column="m"/>
+         <result property="phonenumber" column="signin_phonenumber"/>
+         <result property="pwd" column="pwd"/>
+         <association property="userInfo" javaType="com.tan.model.UserInfo">
+             <id property="id" column="userinfo_userId"/>
+             <result property="user_id" column="userinfo_userId"/>
+             <result property="nickname" column="userinfo_nickname"/>
+             <result property="sex" column="userinfo_sex"/>
+             <result property="singleOrdouble" column="userinfo_singleOrdouble"/>
+             <result property="birthdayStr" column="birthdayStr"/>
+             <result property="hometown" column="userinfo_hometown"/>
+             <result property="city" column="userinfo_city"/>
+             <result property="job" column="userinfo_job"/>
+             <result property="heading" column="userinfo_heading"/>
+         </association>
+     </resultMap>
+ 
+
+
+
+
+  <!-- 登录时    查询一个用户                            
+<select id="getUsersGignInByphoneandpwd" parameterType="string" resultType="aliasesUser">
+        select * from   hy_usersignin  where phonenumber= #{phonenumber} and  pwd=#{pwd}
+</select>
+ -->
+
+    <!-- 
+    方式一：嵌套结果：使用嵌套结果映射来处理重复的联合结果的子集
+              封装联表查询的数据(去除重复的数据)
+         select * from class c, teacher t where c.teacher_id=t.t_id and c.c_id=1
+         
+         select * from class c, teacher t where c.teacher_id=t.t_id and c.c_id=#{id}
+     -->
+     <!-- <select id="getOneUsers" parameterType="int" resultMap="UsersResultMap">
+         select * from hy_usersignin a,hy_userinfo b where a.id=b.user_id and phonenumber= #{phonenumber} and  pwd=#{pwd}
+     </select> -->
+     <!-- 使用resultMap映射实体类和字段之间的一一对应关系 -->
+     <!-- <resultMap type="me.gacl.domain.Classes" id="UsersResultMap">
+         <id property="id" column="c_id"/>
+         <result property="name" column="c_name"/>
+         <association property="teacher" javaType="me.gacl.domain.Teacher">
+             <id property="id" column="t_id"/>
+             <result property="name" column="t_name"/>
+         </association>
+     </resultMap> -->
+
+    
+</mapper>
+
+<!-- <mapper namespace="com.tan.dao.UserInfoMapper">
+
+<insert id="insertUserInfo1" parameterType="com.tan.model.UserInfo" useGeneratedKeys="true" keyProperty="id">
+ insert into hy_userinfo(user_id,nickname,sex,singleOrdouble,birthday,hometown,city,job,heading) VALUES (#{user_id},#{nickname},#{sex},#{singleOrdouble},#{birthday},#{hometown},#{city},#{job},#{heading})
+</insert>
+    
+</mapper> -->

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tan.dao.ChatLogMapper">
+
+<!--发送信息-->
+ <insert id="sender" parameterType="com.tan.model.ChatLog" useGeneratedKeys="true" keyProperty="id">
+  INSERT INTO hy_chatlog(chatlog_senderid,chatlog_receiverid,chatlog_sendtime,chatlog_sendcontent,chatlog_isRead,chatlog_status) VALUES 
+  (#{senderid},#{receiverid},#{sendtime},#{sendcontent},#{isRead},#{status})
+</insert>
+
+
+<insert id="senderChatLogList" useGeneratedKeys="true" parameterType="java.util.List">  
+    <selectKey resultType="long" keyProperty="id" order="AFTER">  
+        SELECT  
+        LAST_INSERT_ID()  
+    </selectKey>  
+    INSERT INTO hy_chatlog(chatlog_senderid,chatlog_receiverid,chatlog_sendtime,chatlog_sendcontent,chatlog_isRead,chatlog_status)   
+     values  
+    <foreach collection="chatLogList" item="item" index="index" separator="," >  
+        (#{item.senderid},#{item.receiverid},#{item.sendtime},#{item.sendcontent},#{item.isRead},#{item.status})
+    </foreach>  
+</insert>  
+
+
+<!--查找未读信息-->
+ <select id="getUnReadChatLog" parameterType="com.tan.model.ChatLog" resultMap="ChatLogResultMap">
+   SELECT chatlog_id,chatlog_sendcontent FROM hy_chatlog  WHERE chatlog_senderid=#{sendUserid} AND chatlog_receiverid=#{receiverUserid} AND chatlog_isRead=#{readStatus}
+ </select> 
+   <resultMap type="com.tan.model.ChatLog" id="ChatLogResultMap">       
+        <result property="chatlogId" column="chatlog_id"/>
+        <result property="sendcontent" column="chatlog_sendcontent"/>
+   </resultMap>
+   
+<!-- <update id="updateChatLog"  parameterType="java.util.List">     
+          <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+                update test 
+                <set>
+                  test=${item.test}+1
+                </set>
+                where id = ${item.id}
+         </foreach>
+         
+</update> -->
+
+<update id="updateChatLog"  parameterType="java.util.List">     
+          <foreach collection="chatLogList" item="item" index="index" open="" close="" separator=";">
+                update hy_chatlog
+                 <set>
+                  chatlog_isRead='${item.isRead}',chatlog_status=${item.chatlogId} 
+                </set> 
+                 where chatlog_id = ${item.chatlogId}
+         </foreach>         
+</update>
+
+
+   
+   
+<!--   <select id="getUnReadChatLog" parameterType="com.tan.model.ChatLog">
+   SELECT * FROM hy_chatlog  WHERE chatlog_senderid=#{sendUserid} AND chatlog_receiverid=#{receiverUserid} AND chatlog_isRead=#{readStatus}
+ </select>  -->
+
+
+<!--   <select id="getUnReadChatLog" parameterType="com.tan.model.ChatLog" resultMap="ChatLogResultMap">
+         SELECT * FROM hy_userSignIn a,hy_userinfo b WHERE a.signin_id=b.userinfo_userId AND signin_phonenumber= #{phonenumber}  AND signin_pwd=#{pwd}
+     </select> 
+     使用resultMap映射实体类和字段之间的一一对应关系
+      <resultMap type="com.tan.model.UserSignIn" id="UsersResultMap">
+         <id property="id" column="signin_id"/>
+         <id property="phonenumber" column="signin_phonenumber"/>
+         <id property="pwd" column="signin_pwd"/>
+         <result property="phonenumber" column="signin_phonenumber"/>
+         <result property="pwd" column="pwd"/>
+         <association property="userInfo" javaType="com.tan.model.UserInfo">
+             <id property="id" column="userinfo_userId"/>
+             <result property="user_id" column="userinfo_userId"/>
+             <result property="nickname" column="userinfo_nickname"/>
+             <result property="sex" column="userinfo_sex"/>
+             <result property="singleOrdouble" column="userinfo_singleOrdouble"/>
+             <result property="birthday" column="userinfo_birthday"/>
+             <result property="hometown" column="userinfo_hometown"/>
+             <result property="city" column="userinfo_city"/>
+             <result property="job" column="userinfo_job"/>
+             <result property="heading" column="userinfo_heading"/>
+         </association>
+     </resultMap> -->
+  
+
+    
+</mapper>

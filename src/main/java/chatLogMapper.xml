@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tan.dao.ChatLogMapper">
+
+<!--发送信息-->
+ <insert id="sender" parameterType="com.tan.model.ChatLog" useGeneratedKeys="true" keyProperty="id">
+  INSERT INTO hy_chatlog(chatlog_senderid,chatlog_receiverid,chatlog_sendtime,chatlog_sendcontent,chatlog_isRead,chatlog_status) VALUES (#{senderid},#{receiverid},#{sendtime},#{sendcontent},#{isRead},#{status})
+</insert>
+
+
+    
+</mapper>

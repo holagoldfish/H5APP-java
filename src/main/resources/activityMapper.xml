@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tan.dao.ActivityMapper">
+
+<!--注册时：手机号及密码 -->
+ <insert id="addActivity" parameterType="com.tan.model.Activity" useGeneratedKeys="true" keyProperty="id">
+ insert into hy_activity(activity_publisherUserId,activity_timeStart,activity_timeEnd,activity_deposit,activity_totalAmount,activity_theme,activity_content,activity_activityType,activity_activityStatus)
+ values(#{publisherUserId},#{timeStart},#{timeEnd},#{deposit},#{totalAmount},#{theme},#{content},#{activityType},#{activityStatus})
+</insert>
+
+
+
+<!-- 
+    方式一：嵌套结果：使用嵌套结果映射来处理重复的联合结果的子集
+              封装联表查询的数据(去除重复的数据)
+         select * from class c, teacher t where c.teacher_id=t.t_id and c.c_id=1         
+         select * from class c, teacher t where c.teacher_id=t.t_id and c.c_id=#{id}
+     -->
+    <select id="getAllActivityLimit" parameterType="java.util.List" resultMap="ActivityListResultMap">
+         SELECT * FROM hy_activity t ORDER BY activity_id ASC LIMIT #{offset},#{limit}
+     </select> 
+    <resultMap type="com.tan.model.Activity" id="ActivityListResultMap">       
+        <result property="id" column="activity_id"/>
+        <result property="publisherUserId" column="activity_publisherUserId"/>        
+        <result property="timeStart" column="activity_timeStart"/>
+        <result property="timeEnd" column="activity_timeEnd"/>         
+        <result property="deposit" column="activity_deposit"/>
+        <result property="totalAmount" column="activity_totalAmount"/>           
+        <result property="theme" column="activity_theme"/>        
+        <result property="content" column="activity_content"/>
+        <result property="activityType" column="activity_content"/>
+        <result property="activityStatus" column="activity_activityStatus"/>
+   </resultMap>
+
+
+<!-- 
+    方式一：嵌套结果：使用嵌套结果映射来处理重复的联合结果的子集
+              封装联表查询的数据(去除重复的数据)
+         select * from class c, teacher t where c.teacher_id=t.t_id and c.c_id=1         
+         select * from class c, teacher t where c.teacher_id=t.t_id and c.c_id=#{id}
+     -->
+    <select id="getActivityByType" parameterType="java.util.List" resultMap="ActivityByTypeListResultMap">
+         SELECT * FROM hy_activity where activity_activityType=#{activityType} ORDER BY activity_id ASC LIMIT #{offset},#{limit}
+     </select> 
+    <resultMap type="com.tan.model.Activity" id="ActivityByTypeListResultMap">       
+        <result property="id" column="activity_id"/>
+        <result property="publisherUserId" column="activity_publisherUserId"/>        
+         <result property="timeStart" column="activity_timeStart"/>
+        <result property="timeEnd" column="activity_timeEnd"/>        
+        <result property="deposit" column="activity_deposit"/>
+        <result property="totalAmount" column="activity_totalAmount"/>        
+        <result property="theme" column="activity_theme"/>        
+        <result property="content" column="activity_content"/>
+        <result property="activityType" column="activity_activityType"/>
+        <result property="activityStatus" column="activity_activityStatus"/>
+   </resultMap>
+
+
+    
+</mapper>
+

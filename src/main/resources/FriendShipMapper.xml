@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tan.dao.FriendShipMapper" >
+
+<!--发送信息-->
+<!--  <insert id="add" parameterType="com.tan.model.FriendShip">
+  INSERT INTO hy_friendship(fridendship_userid,fridendship_friendid,fridendship_groupid)  VALUES(#{userid},#{friendid},#{groupid})
+  <selectKey keyProperty="id" resultType="int" order="AFTER">
+			select LAST_INSERT_ID() 
+  </selectKey> 
+</insert> -->
+
+
+<insert id="addfriendship" useGeneratedKeys="true" keyProperty="id" parameterType="com.tan.model.FriendShip">
+    insert into hy_friendship(fridendship_userid,fridendship_friendid,fridendship_groupid)
+    values(#{userid},#{friendid},#{groupid})
+</insert>
+
+<!--查找是否是朋友-->
+  <select id="getfriendship" parameterType="com.tan.model.FriendShip" resultMap="FriendShipResultMap">
+    SELECT friendship_id,fridendship_userid,fridendship_friendid FROM hy_friendship WHERE fridendship_userid=#{userid} AND fridendship_friendid=#{friendid}
+ </select> 
+<resultMap type="com.tan.model.FriendShip" id="FriendShipResultMap">       
+        <result property="id" column="friendship_id"/>
+        <result property="userid" column="fridendship_userid"/>
+        <result property="friendid" column="fridendship_friendid"/>
+</resultMap>
+
+    
+ <select id="getfriendshipList" parameterType="java.util.List" resultMap="FriendShipListResultMap">
+    SELECT friendship_id,fridendship_userid,fridendship_friendid FROM hy_friendship WHERE fridendship_userid=#{userid} AND fridendship_friendid=#{friendid}
+ </select> 
+<resultMap type="com.tan.model.FriendShip" id="FriendShipListResultMap">       
+        <result property="id" column="friendship_id"/>
+        <result property="userid" column="fridendship_userid"/>
+        <result property="friendid" column="fridendship_friendid"/>
+</resultMap>
+   
+
+    
+ <select id="getmyfriendshipList" parameterType="java.util.List" resultMap="myFriendShipListResultMap">
+    SELECT friendship_id,fridendship_userid,fridendship_friendid FROM hy_friendship WHERE fridendship_userid=#{userid}
+ </select> 
+<resultMap type="com.tan.model.FriendShip" id="myFriendShipListResultMap">       
+        <result property="id" column="friendship_id"/>
+        <result property="userid" column="fridendship_userid"/>
+        <result property="friendid" column="fridendship_friendid"/>
+</resultMap>
+   
+
+    
+</mapper>

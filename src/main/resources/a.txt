@@ -1,0 +1,1213 @@
+
+http://www.oschina.net/question/137225_27929
+
+
+var socket;
+var $ = function() {
+    return document.getElementById(arguments[0]);
+}
+var log = function(msg) {
+    $("log").innerHTML ? $("log").innerHTML += "<br />" + msg : $("log").innerHTML = msg;
+}
+var initWebSocket = function() {
+    if (window.WebSocket) {
+        socket = new WebSocket("ws://127.0.0.1:8080/websocket");
+        socket.onmessage = function(event) {
+            var json = JSON.parse(event.data);
+            document.getElementById("message").value = json.message;
+        };
+        socket.onopen = function(event) {
+            log("Web Socket opened!");
+        };
+        socket.onclose = function(event) {
+            log("Web Socket closed.");
+        };
+        socket.onerror = function(event) {
+            log("Web Socket error.");
+        };
+    } else {
+        log("Your browser does not support Web Socket.");
+    }
+}
+var send = function() {
+    var data = function() {
+        socket.send("{'send':1,'take':2,'message':" + Math.random() + "}");
+    };
+    if (socket.readyState !== 1) {
+        socket.close();
+        initWebSocket();
+        setTimeout(function() {
+            data();
+        }, 250);
+    } else {
+        data();
+    };
+ 
+}
+window.onload = function() {
+    initWebSocket();
+}
+
+
+
+
+
+
+
+-Xmx2014M -Xms1024M -XX:MaxPermSize=2014M
+
+tomcat/bin/catalina.bat
+Guess下加
+set JAVA_OPTS=-Xms1024m -Xmx1024m -Djava.awt.headless=true
+
+环境变量
+JAVA_OPTS  -Xms2014m -Xmx2014m -Djava.awt.headless=true
+
+
+
+
+
+CREATE TABLE yj_users(id INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(100), pwd VARCHAR(20));
+
+INSERT INTO yj_users(username, pwd) VALUES('username-孤傲苍狼', '123456');
+
+INSERT INTO yj_users(username, pwd) VALUES('username-张三', '123456');
+
+G:\html5appjava\20160429\cankao5
+
+http://172.16.2.142:8081/tan.maven.springmvc Maven Webapp/users.do?method=testhy
+
+页面：
+tab-webview-subpage-contact.html  function getAllUserLimit(start,end)
+login3.html   func_url
+register-phonenumber.html     var func_url=
+im-chat5.html      webSocket = new WebSocket('ws://192.168.0.105:8081/tan.maven.springmvc Maven Webapp/chatlog/aaaa/bbbbb');     
+list-userinfo5.html                   var func_url1=       var func_url= 
+myfriend2.html  var func_url="http://192.168.21.106:8081/tan.maven.springmvc Maven Webapp/users.do?method=getUserfriend"
+releaseActivity2.html  var func_url="http://192.168.21.106:8081/tan.maven.springmvc Maven Webapp/activity.do?method=addActivity";
+tab-webview-subpage-activity.html  var func_url
+login-userinfo.html
+
+CREATE TABLE hy_userSignIn (
+  id INT(5) NOT NULL AUTO_INCREMENT,
+  phonenumber VARCHAR(20)NOT NULL,
+  pwd VARCHAR(25)NOT NULL,
+  isLogin INT(5),  
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE hy_userinfo (
+  id INT(5) NOT NULL AUTO_INCREMENT,
+  user_id INT(5),
+  nickname VARCHAR(25),
+  sex VARCHAR(10),
+  singleOrdouble VARCHAR(10),
+  birthday DATE,
+  hometown VARCHAR(50),
+  city VARCHAR(50),
+  job VARCHAR(25),
+  heading VARCHAR(800),
+  PRIMARY KEY  (id)
+)
+
+
+====================================
+
+CREATE TABLE hy_userSignIn (
+  signin_id INT(5) NOT NULL AUTO_INCREMENT,
+  signin_phonenumber VARCHAR(20)NOT NULL,
+  signin_pwd VARCHAR(25)NOT NULL,
+  signin_isLogin INT(5),  
+  PRIMARY KEY  (`signin_id`)
+);
+
+CREATE TABLE hy_userinfo (
+  userinfo_id INT(5) NOT NULL AUTO_INCREMENT,
+  userinfo_userId INT(5),
+  userinfo_nickname VARCHAR(25),
+  userinfo_sex VARCHAR(5),
+  userinfo_singleOrdouble VARCHAR(5),
+  userinfo_birthday DATE,
+  userinfo_hometown VARCHAR(50),
+  userinfo_city VARCHAR(50),
+  userinfo_job VARCHAR(25),
+  userinfo_heading LONGTEXT,
+  PRIMARY KEY  (userinfo_id)
+)
+
+
+insert into hy_userSignIn(signin_phonenumber,signin_pwd,signin_isLogin) values('18321333002','aaa111',0);
+
+
+ <insert id="insertUserSignIn1" parameterType="com.tan.model.UserSignIn" useGeneratedKeys="true" keyProperty="id">
+  insert into hy_userSignIn(phonenumber,pwd,isLogin) values (#{phonenumber},#{pwd},#{isLogin})
+</insert>
+
+ <insert id="insertUserInfo1" parameterType="com.tan.model.UserInfo" useGeneratedKeys="true" keyProperty="id">
+ insert into hy_userinfo(user_id,nickname,sex,singleOrdouble,birthday,hometown,city,job,heading) VALUES (#{user_id},#{nickname},#{sex},#{singleOrdouble},#{birthday},#{hometown},#{city},#{job},#{heading})
+</insert>
+
+
+ 
+ ----用户组
+  CREATE TABLE hy_usergroup ( 
+    group_id INT NOT NULL AUTO_INCREMENT,
+    group_name VARCHAR(20)   NOT NULL,
+    PRIMARY KEY  (`group_id`)
+   );
+   
+  
+  ----好友关系
+  CREATE TABLE hy_friendship (  
+   friendship_id INT NOT NULL AUTO_INCREMENT,
+   fridendship_userid INT NOT NULL,
+   fridendship_friendid INT NOT NULL,
+   fridendship_groupid INT,
+   PRIMARY KEY  (`friendship_id`)
+  );
+  
+
+----聊天记录表
+  CREATE TABLE hy_chatlog (  
+   chatlog_id INT NOT NULL AUTO_INCREMENT,
+   chatlog_senderid INT NOT NULL,
+   chatlog_receiverid INT NOT NULL,
+   chatlog_sendtime DATE,
+   chatlog_sendcontent TEXT,
+   chatlog_remark TEXT,   
+   chatlog_isRead VARCHAR(25),
+   chatlog_status INT,
+   PRIMARY KEY  (`chatlog_id`)
+  );
+  
+  1.list-userinfo5.html 聊天判断 是否登录，是否点击是自己
+  
+  1. #将传入的数据都当成一个字符串，即会对自动传入的数据加一个双引号。
+如：对于sql语句order by #user_id#，如果传入的值是111,那么解析成sql时的值为order by "111", 如果传入的值是id，则解析成的sql为order by "id"。
+ 
+2. $将传入的数据直接显示生成在sql中，不会添加引号。
+如：对于sql语句order by $user_id$，如果传入的值是111,那么解析成sql时的值为order by 111,  如果传入的值是id，则解析成的sql为order by id.
+
+
+
+CREATE TABLE hy_activity (  
+			   activity_id INT NOT NULL AUTO_INCREMENT,
+			   activity_publisherUserId INT NOT NULL,
+			   activity_timeStart DATE,
+			   activity_timeEnd DATE,
+			   activity_deposit INT,
+			   activity_totalAmount INT,
+			   activity_theme VARCHAR(100),
+			   activity_content TEXT,
+			   activity_activityType INT,
+			   activity_activityStatus INT,
+			   PRIMARY KEY  (`activity_id`)
+			  );
+
+
+CREATE TABLE hy_activityInfo (  
+			   activityInfo_id INT NOT NULL AUTO_INCREMENT,
+			   activityInfo_activityId INT,
+			   activityInfo_publisherId INT,
+			   activityInfo_applicantsId INT,
+			   activityInfo_deposit INT,
+			   activityInfo_totalAmount INT,
+			   activityInfo_activityInfostatus INT,
+			   PRIMARY KEY  (`activityInfo_id`)
+			  );
+  
+
+ SELECT *,DATE_FORMAT(b.userinfo_birthday,"%Y-%m-%d") birthdayStr  FROM hy_userSignIn a,hy_userinfo b,hy_friendship c WHERE a.signin_id=b.userinfo_userId and c.fridendship_userid=b.`userinfo_userId`
+  and c.fridendship_userid=1 ORDER BY b.`userinfo_userId` ASC LIMIT #{offset},#{limit}
+
+
+
+
+
+
+
+
+	var btns = $('#demo4');
+				btn.addEventListener('tap', function() {
+					var optionsJson = this.getAttribute('data-options') || '{}';
+						var options = JSON.parse(optionsJson);
+						var id = this.getAttribute('id');
+					
+				});
+				
+
+
+
+
+
+	var result = $('#result')[0];
+				var btns = $('.btn');
+				btns.each(function(i, btn) {
+					btn.addEventListener('tap', function() {
+						var optionsJson = this.getAttribute('data-options') || '{}';
+						var options = JSON.parse(optionsJson);
+						var id = this.getAttribute('id');
+						/*
+						 * 首次显示时实例化组件
+						 * 示例为了简洁，将 options 放在了按钮的 dom 上
+						 * 也可以直接通过代码声明 optinos 用于实例化 DtPicker
+						 */
+						var picker = new $.DtPicker(options);
+						picker.show(function(rs) {
+							/*
+							 * rs.value 拼合后的 value
+							 * rs.text 拼合后的 text
+							 * rs.y 年，可以通过 rs.y.vaue 和 rs.y.text 获取值和文本
+							 * rs.m 月，用法同年
+							 * rs.d 日，用法同年
+							 * rs.h 时，用法同年
+							 * rs.i 分（minutes 的第二个字母），用法同年
+							 */
+							/*result.innerText = '选择结果: ' + rs.text;*/
+							result.innerText =  rs.text;
+							/* 
+							 * 返回 false 可以阻止选择框的关闭
+							 * return false;
+							 */
+							/*
+							 * 释放组件资源，释放后将将不能再操作组件
+							 * 通常情况下，不需要示放组件，new DtPicker(options) 后，可以一直使用。
+							 * 当前示例，因为内容较多，如不进行资原释放，在某些设备上会较慢。
+							 * 所以每次用完便立即调用 dispose 进行释放，下次用时再创建新实例。
+							 */
+							picker.dispose();
+						});
+					}, false);
+				});
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				var btns=document.getElementById("demo4");
+				console.log("fsdaaaaaaaaaaaa");
+				btn.addEventListener('tap', function() {
+					   console.log(this);
+						var optionsJson = this.getAttribute('data-options') || '{}';
+						var options = JSON.parse(optionsJson);
+						var id = this.getAttribute('id');
+						/*
+						 * 首次显示时实例化组件
+						 * 示例为了简洁，将 options 放在了按钮的 dom 上
+						 * 也可以直接通过代码声明 optinos 用于实例化 DtPicker
+						 */
+						var picker = new $.DtPicker(options);
+						picker.show(function(rs) {
+							/*
+							 * rs.value 拼合后的 value
+							 * rs.text 拼合后的 text
+							 * rs.y 年，可以通过 rs.y.vaue 和 rs.y.text 获取值和文本
+							 * rs.m 月，用法同年
+							 * rs.d 日，用法同年
+							 * rs.h 时，用法同年
+							 * rs.i 分（minutes 的第二个字母），用法同年
+							 */
+							/*result.innerText = '选择结果: ' + rs.text;*/
+							result.innerText =  rs.text;
+							/* 
+							 * 返回 false 可以阻止选择框的关闭
+							 * return false;
+							 */
+							/*
+							 * 释放组件资源，释放后将将不能再操作组件
+							 * 通常情况下，不需要示放组件，new DtPicker(options) 后，可以一直使用。
+							 * 当前示例，因为内容较多，如不进行资原释放，在某些设备上会较慢。
+							 * 所以每次用完便立即调用 dispose 进行释放，下次用时再创建新实例。
+							 */
+							picker.dispose();
+						});
+					}, false);
+				
+				
+				
+				
+	function cutString(str, len) {
+08
+    //length属性读出来的汉字长度为1
+09
+    if(str.length*2 <= len) {
+10
+        return str;
+11
+    }
+12
+    var strlen = 0;
+13
+    var s = "";
+14
+    for(var i = 0;i < str.length; i++) {
+15
+        s = s + str.charAt(i);
+16
+        if (str.charCodeAt(i) > 128) {
+17
+            strlen = strlen + 2;
+18
+            if(strlen >= len){
+19
+                return s.substring(0,s.length-1) + "...";
+20
+            }
+21
+        } else {
+22
+            strlen = strlen + 1;
+23
+            if(strlen >= len){
+24
+                return s.substring(0,s.length-2) + "...";
+25
+            }
+26
+        }
+27
+    }
+28
+    return s;
+29
+}
+			
+ 1.eclipse:G:\ProgramFiles\Java\eclipse
+2.tomcat: G:\ProgramFiles\Java\apache-tomcat-7.0.68
+3.程序：G:\20160618html5appjava-5\tan.maven.springmvc Maven Webapp
+4.eclipse:window-》Preferences—>java—>Installed JREs 
+  jre home :G:\ProgramFiles\Java\jdk1.7.0_79
+  jre name:jdk1.7.0_79
+  add external jars: G:\ProgramFiles\Java\jdk1.7.0_79\jre\*
+                     G:\ProgramFiles\Java\jdk1.7.0_79\lib\tools.jar
+                     
+hbuilder: G:\20160618html5appjava-5\cankao5
+
+
+http://jingyan.baidu.com/article/597035521d5de28fc00740e6.html
+http://www.tuicool.com/articles/A3Izmi
+http://jingyan.baidu.com/album/f79b7cb35c0f439144023e38.html?picindex=1
+
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'127.0.0.1' IDENTIFIED BY '' WITH GRANT OPTION;
+
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'192.168.51.109' IDENTIFIED BY '' WITH GRANT OPTION;
+
+hbuilder打包时，文件不能中文，图标必须是png
+
+
+cankao6 
+index-ok.html index-ok
+
+<div style="background: url(../images/cbd.jpg);  background-size: cover; width: 100%;height: 100%;"> </div>
+
+背景图片拉伸占满整个div，不是循环出现的。
+好的方法就是，你让这个图片不以背景图的形式出现，而是图片的形式出现在这个div里，且图片的宽度和高度=div的宽度和高度。在设置position=absolute 和z-index。
+-------------------------------------------------------------------
+<div style="width:600px;height:600px;">
+<img src="img.jpg" style="width:600px;height:600px;position:absolute;z-index:-10;">
+<div style="width:100px;height:100px;background:#ccc">
+</div>
+</div>
+
+
+你是砍柴的 ，他是放羊的 ，你和他聊了一天 ，他的羊吃饱了 ，你的柴呢？？ 请放弃你的无效社交！ 砍柴的陪不起放羊的。
+
+extend()
+
+将两个对象合并成一个对象。
+
+.extend( target , object1 [, objectN] )
+target
+Type: Object
+需合并的目标对象
+object1
+Type: Object
+需合并的对象
+objectN
+Type: Object
+需合并的对象
+.extend( deep , target , object1 [, objectN] )
+deep
+Type: Boolean
+若为true，则递归合并
+target
+Type: Object
+需合并的目标对象
+object1
+Type: Object
+需合并的对象
+objectN
+Type: Object
+需合并的对象
+示例
+
+var target = {
+company:"dcloud",
+product:{
+mui:"小巧、高效"
+}
+} 
+var obj1 = {
+city:"beijing",
+product:{
+HBuilder:"飞一样的编码"
+}
+}
+mui.extend(target,obj1);
+//输出：{"company":"dcloud","product":{"HBuilder":"飞一样的编码"},"city":"beijing"}
+console.log(JSON.stringify(target));
+转自【B5教程网】：http://www.bcty365.com/content-146-3304-1.html
+
+
+var self = plus.webview.currentWebview();
+				for (var i = 0; i < 4; i++) {
+					var temp = {};
+					var sub = plus.webview.create(subpages[i], subpages[i], subpage_style);
+					if (i > 0) {
+						sub.hide();
+					}else{
+						temp[subpages[i]] = "true";
+						mui.extend(aniShow,temp);
+					}
+					self.append(sub);
+				} 
+				
+
+锁定屏幕方向
+void plus.screen.lockOrientation( String orientation );     
+说明：
+锁定屏幕方向后屏幕只能按锁定的屏幕方向显示，关闭当前页面后仍然有效。 可再次调用此方法修改屏幕锁定方向或调用unlockOrientation()方法恢复到应用的默认值。
+
+参数：
+orientation: ( String ) 必选 要锁定的屏幕方向值
+锁定屏幕方向可取以下值： "portrait-primary": 竖屏正方向； "portrait-secondary": 竖屏反方向，屏幕正方向按顺时针旋转180°； "landscape-primary": 横屏正方向，屏幕正方向按顺时针旋转90°； "landscape-secondary": 横屏方向，屏幕正方向按顺时针旋转270°； "portrait": 竖屏正方向或反方向，根据设备重力感应器自动调整； "landscape": 横屏正方向或反方向，根据设备重力感应器自动调整；
+返回值：
+void : 无
+unlockOrientation
+解除锁定屏幕方
+void plus.screen.unlockOrientation();
+
+
+
+
+
+CREATE TABLE hy_userSignIn (
+  signin_id INT(5) NOT NULL AUTO_INCREMENT,
+  signin_phonenumber VARCHAR(20)NOT NULL,
+  signin_pwd VARCHAR(25)NOT NULL,
+  signin_isLogin INT(5),  
+  PRIMARY KEY  (`signin_id`)
+);
+
+CREATE TABLE hy_userinfo (
+  userinfo_id INT(5) NOT NULL AUTO_INCREMENT,
+  userinfo_userId INT(5),
+  userinfo_nickname VARCHAR(25),
+  userinfo_sex VARCHAR(5),
+  userinfo_singleOrdouble VARCHAR(5),
+  userinfo_birthday DATE,
+  userinfo_hometown VARCHAR(50),
+  userinfo_city VARCHAR(50),
+  userinfo_job VARCHAR(25),
+  userinfo_heading LONGTEXT,
+  PRIMARY KEY  (userinfo_id)
+);
+
+
+ ----用户组
+  CREATE TABLE hy_usergroup ( 
+    group_id INT NOT NULL AUTO_INCREMENT,
+    group_name VARCHAR(20)   NOT NULL,
+    PRIMARY KEY  (`group_id`)
+   );
+   
+  
+  ----好友关系
+  CREATE TABLE hy_friendship (  
+   friendship_id INT NOT NULL AUTO_INCREMENT,
+   fridendship_userid INT NOT NULL,
+   fridendship_friendid INT NOT NULL,
+   fridendship_groupid INT,
+   PRIMARY KEY  (`friendship_id`)
+  );
+  
+
+----聊天记录表
+  CREATE TABLE hy_chatlog (  
+   chatlog_id INT NOT NULL AUTO_INCREMENT,
+   chatlog_senderid INT NOT NULL,
+   chatlog_receiverid INT NOT NULL,
+   chatlog_sendtime DATE,
+   chatlog_sendcontent TEXT,
+   chatlog_remark TEXT,   
+   chatlog_isRead VARCHAR(25),
+   chatlog_status INT,
+   PRIMARY KEY  (`chatlog_id`)
+  );
+  
+
+CREATE TABLE hy_activity (  
+			   activity_id INT NOT NULL AUTO_INCREMENT,
+			   activity_publisherUserId INT NOT NULL,
+			   activity_timeStart DATE,
+			   activity_timeEnd DATE,
+			   activity_deposit INT,
+			   activity_totalAmount INT,
+			   activity_theme VARCHAR(100),
+			   activity_content TEXT,
+			   activity_activityType INT,
+			   activity_activityStatus INT,
+			   PRIMARY KEY  (`activity_id`)
+			  );
+
+
+CREATE TABLE hy_activityInfo (  
+			   activityInfo_id INT NOT NULL AUTO_INCREMENT,
+			   activityInfo_activityId INT,
+			   activityInfo_publisherId INT,
+			   activityInfo_applicantsId INT,
+			   activityInfo_deposit INT,
+			   activityInfo_totalAmount INT,
+			   activityInfo_activityInfostatus INT,
+			   PRIMARY KEY  (`activityInfo_id`)
+			  );
+			  			
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '' WITH GRANT OPTION;			  
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'127.0.0.1' IDENTIFIED BY '' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'192.168.51.109' IDENTIFIED BY '' WITH GRANT OPTION;
+SELECT * FROM hy_userSignIn a,hy_userinfo b WHERE a.signin_id=b.userinfo_userId AND signin_phonenumber='18321333674' AND signin_pwd='aaa111';
+
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'127.0.0.1' IDENTIFIED BY '' WITH GRANT OPTION;
+
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+ <html xmlns="http://www.w3.org/1999/xhtml" >
+ <head>
+     <title>Untitled Page</title>
+      <script type="text/javascript" src=jquery.min.js"></script>
+      <script type="text/javascript">
+     jQuery(document).ready(function(){
+        $.ajax({
+             type: "get",
+             async: false,
+             url: "http://flightQuery.com/jsonp/flightResult.aspx?code=CA1998",
+             dataType: "jsonp",
+             jsonp: "callback",//传递给请求处理程序或页面的，用以获得jsonp回调函数名的参数名(一般默认为:callback)
+             jsonpCallback:"flightHandler",//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名，也可以写"?"，jQuery会自动为你处理数据
+             success: function(json){
+                 alert('您查询到航班信息：票价： ' + json.price + ' 元，余票： ' + json.tickets + ' 张。');
+             },
+             error: function(){
+                 alert('fail');
+             }
+         });
+     });
+     </script>
+     </head>
+  <body>
+  </body>
+ </html>
+ 
+ 
+ 
+ 
+ 
+@RequestMapping(params = "method=getAllUserLimit")	
+public void getAllUserLimit(Users user,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException{
+
+	 System.out.println("UsersController.java getAllUserLimit");  
+	  request.setCharacterEncoding("utf-8");  
+	  int start = Integer.parseInt(request.getParameter("start"));
+	  int end = Integer.parseInt(request.getParameter("end"));
+	
+	  userSignInDao=new UserSignInDao();
+	  List<UserSignIn> userslist=userSignInDao.getAllUserLimit(start, end);
+	  
+	  response.setContentType("text/html;charset=GBK");
+	 /* JSONObject jsonObj = new JSONObject();
+	  jsonObj.put("userslist",userslist);	*/
+	  
+	//  JSONObject jsonObject = JSONObject.fromObject(jsonObj); 
+	 // System.out.println(jsonObject);//输出	  
+	  //JSONArray jsonArray = JSONArray.fromObject(userslist);	  
+	   
+		try {
+			// ok1
+			response.setHeader("Access-Control-Allow-Origin", "");
+			response.setHeader("Access-Control-Allow-Headers", "X-Requested-With");
+			response.setHeader("Cache-Control", "no-cache");
+			
+			  JSONArray jsonArray = JSONArray.fromObject(userslist);
+			  System.out.println(jsonArray);
+			  response.getWriter().print(jsonArray.toString());
+			
+			//ok2			
+			/*【需要解决】
+			  String jsonp=request.getParameter("callback");  
+		     System.out.println("jsonp "+jsonp); 
+			 response.setHeader("Access-Control-Allow-Origin", "");
+			response.setHeader("Access-Control-Allow-Headers", "X-Requested-With");
+			response.setHeader("Cache-Control", "no-cache");
+			JSONArray jsonArray = JSONArray.fromObject(userslist);
+			System.out.println("获取"+jsonArray.toString());  
+			response.getWriter().print(jsonp+"("+jsonArray.toString()+")");*/
+			
+			/* 【需要解决】
+			 JSONObject jsonObj = new JSONObject();
+			  jsonObj.put("userslist",userslist);
+			JSONObject jsonObject = JSONObject.fromObject(jsonObj); 			
+			String jsonp=request.getParameter("callback");  
+		     System.out.println("jsonp "+jsonp); 		     
+			 response.setHeader("Access-Control-Allow-Origin", "");
+			response.setHeader("Access-Control-Allow-Headers", "X-Requested-With");
+			response.setHeader("Cache-Control", "no-cache");
+			response.getWriter().print(jsonp+"("+jsonObject.toString()+")");*/
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+ 
+ 
+ 也谈谈同源策略和跨域问题
+1 同源策略
+所谓同源策略，指的是浏览器对不同源的脚本或者文本的访问方式进行的限制。比如源a的js不能读取或设置引入的源b的元素属性。
+
+那么先定义下什么是同源，所谓同源，就是指两个页面具有相同的协议，主机（也常说域名），端口，三个要素缺一不可。
+
+可以看下面的几个示例来更加清楚的了解一下同源的概念：
+
+URL1	URL2	说明	是否允许通信
+http://www.foo.com/js/a.js	http://www.foo.com/js/b.js	协议、域名、端口都相同	允许
+http://www.foo.com/js/a.js	http://www.foo.com:8888/js/b.js	协议、域名相同，端口不同	不允许
+https://www.foo.com/js/a.js	http://www.foo.com/js/b.js	主机、域名相同，协议不同	不允许
+http://www.foo.com/js/a.js	http://www.bar.com/js/b.js	协议、端口相同，域名不同	不允许
+http://www.foo.com/js/a.js	http://foo.com/js/b.js	协议、端口相同，主域名相同，子域名不同	不允许
+同源策略限制了不同源之间的交互，但是有人也许会有疑问，我们以前在写代码的时候也常常会引用其他域名的js文件，样式文件，图片文件什么的，没看到限制啊，这个定义是不是错了。其实不然，同源策略限制的不同源之间的交互主要针对的是js中的XMLHttpRequest等请求，下面这些情况是完全不受同源策略限制的。
+
+页面中的链接，重定向以及表单提交是不会受到同源策略限制的。链接就不用说了，导航网站上的链接都是链接到其他站点的。而你在域名www.foo.com下面提交一个表单到www.bar.com是完全可以的。
+跨域资源嵌入是允许的，当然，浏览器限制了Javascript不能读写加载的内容。如前面提到的嵌入的<script src="..."></script>，<img>，<link>，<iframe>等。当然，如果要阻止iframe嵌入我们网站的资源(页面或者js等)，我们可以在web服务器加上一个X-Frame-Options DENY头部来限制。nginx就可以这样设置add_header X-Frame-Options DENY;。
+既然有这么多的情况是没有同源策略限制的，那么通常的跨域问题从何而来呢？转到下一节跨域问题。
+
+2 跨域问题
+这一节来讨论下跨域问题，当然前置条件是我们在WEB服务器或者服务端脚本中设置ACCESS-CONTROL-ALLOW-ORIGIN头部，如果设置了这些头部并允许某些域名跨域访问，则浏览器就会跳过同源策略的限制返回对应的内容。此外，如果你不是通过浏览器去获取资源，比如你通过一个python脚本去调用接口或者获取js文件，也不在这个限制之内。
+
+2.1 Ajax跨域
+通过ajax调用其他域的接口会有跨域问题。比如下面的例子，我在http://www.foo.com/index.html中通过ajax调用请求http://www.bar.com/js/test.js页面，此时是会报错的。
+
+XMLHttpRequest cannot load http://www.bar.com/js/test.js. 
+No 'Access-Control-Allow-Origin' header is present on the requested resource. 
+Origin 'http://www.foo.com' is therefore not allowed access.
+这是因为我们的WEB服务器没有设置ACCESS-CONTROL-ALLOW-ORIGIN头部，默认情况下是禁止跨域引用资源的。当然这里有一点要注意，其实这个跨域请求是发送成功了的，服务器也有返回test.js内容，只是浏览器禁止Javascript去取response的数据而已。如果要设置ACCESS-CONTROL-ALLOW-ORIGIN头部，nginx可以使用下面的代码
+
+add_header 'Access-Control-Allow-Origin' 'http://www.foo.com';
+add_header 'Access-Control-Allow-Credentials' 'true';
+add_header 'Access-Control-Allow-Methods' 'GET,POST';
+另外，我们看到直接通过Javascript去取iframe中的元素也是会报错的，因为域名不同。报错如下所示
+
+Uncaught SecurityError: Failed to read the 'contentDocument' property from 'HTMLIFrameElement': Blocked a frame with origin "http://www.foo.com" from accessing a frame with origin "http://foo.com". 
+The frame being accessed set "document.domain" to "foo.com", but the frame requesting access did not. Both must set "document.domain" to the same value to allow access.
+这时因为我们的主域名相同，因此可以在index.html和test.html中设置document.domain='foo.com'来访问iframe中的元素。注意，是两个域名下面的文件都要设置，即便是同样的主域名。当然这是特例，如果是两个完全不同的域名，是没有办法的，你不能把www.foo.com的domain设置成www.163.com。
+
+此外，在index.html里面也可以看到通过<script>,<iframe>等标签都是可以跨域内嵌资源的。
+
+# index.html
+<!DOCTYPE html>
+<html>
+<head>
+<title>test cross domain</title>
+<script src="/js/jquery.js"></script>
+<script src="http://www.bar.com/js/test.js"></script>
+<script>
+$(function(){
+    document.domain = 'foo.com'; //1 注释掉则会报错 
+    var ifr = document.getElementById("testframe");
+    ifr.onload = function(){
+        var doc = ifr.contentDocument || ifr.contentWindow.document;
+        alert(doc.getElementsByTagName("h1")[0].childNodes[0].nodeValue);
+    }
+});
+
+$.ajax("http://www.bar.com/js/test.js"); //2 报错
+</script>
+
+</head>
+<body>
+<h1>Test Cross Domain</h1>
+<iframe id="testframe" src="http://foo.com/test.html"></iframe>
+</body>
+</html>
+当然还可以通过iframe，location.hash，window.name，HTML5的postMessage等方法来实现跨域资源访问，更多内容参见Rain Man的这篇文章 JavaScript跨域总结和解决办法。
+
+2.2 JSONP跨域访问
+JSONP也是开发中常见到的内容，在jquery中就有封装，通过ajax请求多带上一个jsonp的参数即可。JSONP也能够实现跨域访问资源，但是它的实现原理其实跟ajax没有多少关系，它是通过动态插入<script>标签来实现跨域资源访问的，因为根据前面内容我们已经知道，嵌入跨域资源浏览器是允许的。
+
+下面通过一个简单的例子来说明JSONP的原理。
+两个文件，第一个是http://www.foo.com/jsonp.html，通过动态创建script标签加载了http://www.bar.com/js/outer.js文件，然后outer.js文件返回的内容正好是一个函数调用，如此，实现了数据传递和回调过程。当然，实际的jsonp接口中，会让你传一个函数名过去，然后返回的数据中回调函数名就是你传的函数名，回调函数的参数则是封装的json格式。jQuery中的jsonp实现原理基本就是这样，更详细的jsonp原理可以参见这篇大作深入浅出JSONP。
+
+# jsonp.html
+<script type="text/javascript">
+    function callback(data) {
+        alert(data.message);
+    }
+    function addScriptTag(src){
+    var script = document.createElement('script');
+        script.src = src;
+        document.body.appendChild(script);
+    }
+
+    window.onload = function(){
+        addScriptTag("http://www.foo.com/js/outer.js");
+    }
+</script>
+
+# outer.js
+callback({message:"success"});
+
+
+
+=========================
+【跨域】
+	
+			function getAllUserLimit(start,end)
+			{
+				//var func_url="http://192.168.21.106:8080/tan.maven.springmvc Maven Webapp/users.do?method=allUsers";  
+				 /* var func_url="http://192.168.21.106:8081/tan.maven.springmvc Maven Webapp/users.do?method=getAllUserLimit"; 
+                   */
+               var func_url=ServerUrl.IP+"/tan.maven.springmvc Maven Webapp/users.do?method=getAllUserLimit&callback='jsoncallback'"; 
+                mui.ajax(func_url,{
+				        	data:{				
+								start:start,end:end
+							},
+							dataType:'jsonp',//服务器返回json格式数据
+							//dataType:'json',
+							type:'post',//HTTP请求类型
+							//timeout:10000,//超时时间设置为10秒；
+							jsonp:"jsoncallback",   
+							success:function(data){ 
+								console.log(data);    
+								 var configData=JSON.parse(data);        //解析数据 cinfig：OK
+								 console.log(configData);
+								 
+								console.log("data"+userslist);     
+								console.log("dataaa"+data.jsoncallback.userslist);  
+								console.log("data.userslist"+data.userslist); 
+								var table = document.body.querySelector('.mui-table-view');
+								var cells = document.body.querySelectorAll('.mui-table-view-cell');
+								 
+								var storage = window.localStorage;
+								storage.setItem("userslist_data",data);
+								
+								for (var i =0; i <data.userslist.length; i++) {
+									var nickname=data.userslist[i].userInfo.nickname;
+									var job=data.userslist[i].userInfo.job;
+									var sex='男';
+									if(data.userslist[i].userInfo.sex=='sexnv')
+									{
+										var sex='女';
+									}
+									var singleOrDouble=data.userslist[i].userInfo.singleOrdouble;
+									var birthday=data.userslist[i].userInfo.birthdayStr;
+									var heading=data.userslist[i].userInfo.heading;
+									
+									console.log("birthday: "+birthday);
+									
+									var li = document.createElement('li');
+									li.className = 'mui-table-view-cell';
+									li.id=data.userslist[i].userInfo.user_id;
+									li.value=data.userslist[i];
+									
+									var a='<div id="listdiv'+li+'" class="mui-slider-cell"><div class="oa-contact-cell mui-table"><div class="oa-contact-avatar mui-table-cell"><img id="heading'+li.id+'" style="width: 60px; height: 60px;" src="'+data.userslist[i].userInfo.heading+'" /></div><div class="oa-contact-content mui-table-cell"><div class="mui-clearfix"><h4 id="nickname'+li.id+'" class="oa-contact-name">'+data.userslist[i].userInfo.nickname+'</h4><span id="sex'+li.id+'" class="oa-contact-position mui-h6">'+sex+'</span>&nbsp;<span id="singleOrDouble'+li.id+'" class="oa-contact-position mui-h6">'+singleOrDouble+'</span>&nbsp;<span id="job'+li.id+'" class="oa-contact-position mui-h6">'+job+'</span></div><p class="oa-contact-email mui-h6">个人宣言aaaa：yewenjie@sina.com</p></div></div></div><div id="birthday'+li.id+'" style="display: none;">'+birthday+'</div>';
+									li.innerHTML=a;			
+									
+									li.addEventListener('tap', function(li) {		
+										
+										var storage = window.localStorage;
+								        var isLogin=storage.getItem("people_isLogin");
+								        
+								        if(isLogin!=1)
+								        {
+								        	alert("请先登录");
+								        	return;
+								        }
+								        else
+								        {
+										
+										var myliid = this.getAttribute('id');										
+										//console.log(document.getElementById("heading"+myliid).src);
+										/*var m=;
+										var himg=;
+										console.log(document.getElementById("nickname"+myliid).innerText);*/										
+										
+										storage.setItem("userslist_checked_user_id",myliid);										
+										storage.setItem("userslist_checked_nickname",document.getElementById("nickname"+myliid).innerText);
+										storage.setItem("userslist_checked_sex",document.getElementById("sex"+myliid).innerText);
+										storage.setItem("userslist_checked_singleOrDouble",document.getElementById("singleOrDouble"+myliid).innerText);
+										storage.setItem("userslist_checked_job",document.getElementById("job"+myliid).innerText);
+										storage.setItem("userslist_checked_birthday",document.getElementById("birthday"+myliid).innerText);
+										storage.setItem("userslist_checked_heading",document.getElementById("heading"+myliid).src);
+										
+										/*var user_id=storage.getItem("userslist_checked_user_id");
+								        var nickname=storage.getItem("userslist_checked_nickname");
+								        var sex=storage.getItem("userslist_checked_sex");
+								        var singleOrDouble=storage.getItem("userslist_checked_singleOrDouble");
+								        var job=storage.getItem("userslist_checked_job");
+								        var heading=storage.getItem("userslist_checked_heading");*/
+										
+										/*storage.setItem("userslist_checked_user_id",myliid);
+								        storage.setItem("userslist_checked_nickname",nickname);
+								        storage.setItem("userslist_checked_sex",sex);
+								        storage.setItem("userslist_checked_singleOrDouble",singleOrDouble);
+								        storage.setItem("userslist_checked_job",job);
+								        storage.setItem("userslist_checked_heading",heading);*/
+										
+										//alert(myliid);
+										//storage.setItem("people_userslist",data);
+										
+										 mui.openWindow({
+										   id:'list-userinfo5.html',
+										   url:'list-userinfo5.html'
+										 });
+										 
+										 }
+										
+										/*var livalues= this.getAttribute('value');
+										alert("fsdff: "+livalues);	*/
+									});
+									
+								
+									
+									//下拉刷新，新纪录插到最前面；
+									table.insertBefore(li, table.firstChild);
+								}
+								mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
+	                           
+							},
+							error:function(xhr,type,errorThrown){
+								//异常处理；
+								//console.log(xhr.Message+"  "+type+" "+errorThrown);
+							}
+						});
+			            
+			}
+	
+	后台：
+	
+@RequestMapping(params = "method=getAllUserLimit")	
+public void getAllUserLimit(Users user,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException{
+
+	 System.out.println("UsersController.java getAllUserLimit");  
+	  request.setCharacterEncoding("utf-8");  
+	  int start = Integer.parseInt(request.getParameter("start"));
+	  int end = Integer.parseInt(request.getParameter("end"));
+	
+	  userSignInDao=new UserSignInDao();
+	  List<UserSignIn> userslist=userSignInDao.getAllUserLimit(start, end);
+	  
+	  response.setContentType("text/html;charset=GBK");
+	 /* JSONObject jsonObj = new JSONObject();
+	  jsonObj.put("userslist",userslist);	*/
+	  
+	//  JSONObject jsonObject = JSONObject.fromObject(jsonObj); 
+	 // System.out.println(jsonObject);//输出	  
+	  //JSONArray jsonArray = JSONArray.fromObject(userslist);	  
+	   
+		try {
+			// ok1
+			response.setHeader("Access-Control-Allow-Origin", "");
+			response.setHeader("Access-Control-Allow-Headers", "X-Requested-With");
+			response.setHeader("Cache-Control", "no-cache");
+			
+			  JSONArray jsonArray = JSONArray.fromObject(userslist);
+			  System.out.println(jsonArray);
+			  response.getWriter().print(jsonArray.toString());
+			
+			//ok2			
+			/*【需要解决】
+			  String jsonp=request.getParameter("callback");  
+		     System.out.println("jsonp "+jsonp); 
+			 response.setHeader("Access-Control-Allow-Origin", "");
+			response.setHeader("Access-Control-Allow-Headers", "X-Requested-With");
+			response.setHeader("Cache-Control", "no-cache");
+			JSONArray jsonArray = JSONArray.fromObject(userslist);
+			System.out.println("获取"+jsonArray.toString());  
+			response.getWriter().print(jsonp+"("+jsonArray.toString()+")");*/
+			
+			/* 【需要解决】
+			 JSONObject jsonObj = new JSONObject();
+			  jsonObj.put("userslist",userslist);
+			JSONObject jsonObject = JSONObject.fromObject(jsonObj); 			
+			String jsonp=request.getParameter("callback");  
+		     System.out.println("jsonp "+jsonp); 		     
+			 response.setHeader("Access-Control-Allow-Origin", "");
+			response.setHeader("Access-Control-Allow-Headers", "X-Requested-With");
+			response.setHeader("Cache-Control", "no-cache");
+			response.getWriter().print(jsonp+"("+jsonObject.toString()+")");*/
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+
+
+===========
+data数据展示
+function viewListDataOld(configData)
+			{
+				var table = document.body.querySelector('.mui-table-view');
+								var cells = document.body.querySelectorAll('.mui-table-view-cell');								 
+								var storage = window.localStorage;
+								storage.setItem("userslist_data",data);
+								
+								for (var i =0; i <data.userslist.length; i++) {
+									var nickname=data.userslist[i].userInfo.nickname;
+									var job=data.userslist[i].userInfo.job;
+									var sex='男';
+									if(data.userslist[i].userInfo.sex=='sexnv')
+									{
+										var sex='女';
+									}
+									var singleOrDouble=data.userslist[i].userInfo.singleOrdouble;
+									var birthday=data.userslist[i].userInfo.birthdayStr;
+									var heading=data.userslist[i].userInfo.heading;
+									var li = document.createElement('li');
+									li.className = 'mui-table-view-cell';
+									li.id=data.userslist[i].userInfo.user_id;
+									li.value=data.userslist[i];									
+									var a='<div id="listdiv'+li+'" class="mui-slider-cell"><div class="oa-contact-cell mui-table"><div class="oa-contact-avatar mui-table-cell"><img id="heading'+li.id+'" style="width: 60px; height: 60px;" src="'+data.userslist[i].userInfo.heading+'" /></div><div class="oa-contact-content mui-table-cell"><div class="mui-clearfix"><h4 id="nickname'+li.id+'" class="oa-contact-name">'+data.userslist[i].userInfo.nickname+'</h4><span id="sex'+li.id+'" class="oa-contact-position mui-h6">'+sex+'</span>&nbsp;<span id="singleOrDouble'+li.id+'" class="oa-contact-position mui-h6">'+singleOrDouble+'</span>&nbsp;<span id="job'+li.id+'" class="oa-contact-position mui-h6">'+job+'</span></div><p class="oa-contact-email mui-h6">个人宣言aaaa：yewenjie@sina.com</p></div></div></div><div id="birthday'+li.id+'" style="display: none;">'+birthday+'</div>';
+									li.innerHTML=a;												
+									li.addEventListener('tap', function(li) {
+										var storage = window.localStorage;
+								        var isLogin=storage.getItem("people_isLogin");								        
+								        if(isLogin!=1)
+								        {
+								        	alert("请先登录");
+								        	return;
+								        }
+								        else
+								        {
+										
+										var myliid = this.getAttribute('id');	
+										storage.setItem("userslist_checked_user_id",myliid);										
+										storage.setItem("userslist_checked_nickname",document.getElementById("nickname"+myliid).innerText);
+										storage.setItem("userslist_checked_sex",document.getElementById("sex"+myliid).innerText);
+										storage.setItem("userslist_checked_singleOrDouble",document.getElementById("singleOrDouble"+myliid).innerText);
+										storage.setItem("userslist_checked_job",document.getElementById("job"+myliid).innerText);
+										storage.setItem("userslist_checked_birthday",document.getElementById("birthday"+myliid).innerText);
+										storage.setItem("userslist_checked_heading",document.getElementById("heading"+myliid).src);
+										
+										 mui.openWindow({
+										   id:'list-userinfo5.html',
+										   url:'list-userinfo5.html'
+										 });
+										 }
+									});
+									
+									//下拉刷新，新纪录插到最前面；
+									table.insertBefore(li, table.firstChild);
+								}
+								mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
+	                           
+			}
+	
+
+	
+	http://www.imooc.com/learn/545
+	
+	【http://www.w3cfuns.com/notes/27637/5eb2ddf49d0d35e53625005767d2e06c.html】
+	【http://www.zhangxinxu.com/wordpress/2012/09/javascript-html-json-template/】
+	【http://aui.github.io/artTemplate/】
+	
+	http://www.520ued.com/article/53e98eafbb16a74c41b5de77
+	http://www.cnblogs.com/flash3d/p/3343877.html?utm_source=tuicool&utm_medium=referral
+	【【http://www.cnblogs.com/Leo_wl/p/5562012.html】】
+	
+	===【js模板引擎】
+	<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="js/arttmpl.js"></script>
+	</head>
+	<body>
+		 <script id="test" type="text/html">
+			<ul>
+			    <% for (i = 0; i < list.length; i ++) { %>
+			        <li>条目内容 <%= i + 1 %> ：<%= list[i] %></li>
+			    <% } %>
+			</ul>
+     </script>
+     <div id="content" onclick="fn();">aaaaaaaaa</div>
+     <script>
+		/*	var data = {
+		     author: '宫崎骏',
+		     isAdmin: true,
+		     list: ['千与千寻', '哈尔的移动城堡', '幽灵公主', '风之谷', '龙猫']
+		 	};*/
+		 	
+		 	/*function fn()
+		 	{*/
+			 	var data={
+			 		list:['aa','bb','cc']		 		
+			 	};
+			   var html = template('test', data);
+			   document.getElementById('content').innerHTML = html;
+		  //}
+		   
+		</script>
+	</body>
+</html>
+	
+【https://github.com/aui/artTemplate#%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95】
+
+
+
+
+
+
+INSERT INTO hy_userSignIn(signin_phonenumber,signin_pwd,signin_isLogin) VALUES('18321333006','aaa111',0);
+INSERT INTO hy_userSignIn(signin_phonenumber,signin_pwd,signin_isLogin) VALUES('18321333007','aaa111',0);
+INSERT INTO hy_userSignIn(signin_phonenumber,signin_pwd,signin_isLogin) VALUES('18321333008','aaa111',0);
+INSERT INTO hy_userSignIn(signin_phonenumber,signin_pwd,signin_isLogin) VALUES('18321333009','aaa111',0);
+INSERT INTO hy_userSignIn(signin_phonenumber,signin_pwd,signin_isLogin) VALUES('18321333010','aaa111',0);
+INSERT INTO hy_userSignIn(signin_phonenumber,signin_pwd,signin_isLogin) VALUES('18321333011','aaa111',0);
+INSERT INTO hy_userSignIn(signin_phonenumber,signin_pwd,signin_isLogin) VALUES('18321333012','aaa111',0);
+INSERT INTO hy_userSignIn(signin_phonenumber,signin_pwd,signin_isLogin) VALUES('18321333013','aaa111',0);
+INSERT INTO hy_userSignIn(signin_phonenumber,signin_pwd,signin_isLogin) VALUES('18321333014','aaa111',0);
+INSERT INTO hy_userSignIn(signin_phonenumber,signin_pwd,signin_isLogin) VALUES('18321333015','aaa111',0);
+INSERT INTO hy_userSignIn(signin_phonenumber,signin_pwd,signin_isLogin) VALUES('18321333016','aaa111',0);
+INSERT INTO hy_userSignIn(signin_phonenumber,signin_pwd,signin_isLogin) VALUES('18321333017','aaa111',0);
+INSERT INTO hy_userSignIn(signin_phonenumber,signin_pwd,signin_isLogin) VALUES('18321333018','aaa111',0);
+INSERT INTO hy_userSignIn(signin_phonenumber,signin_pwd,signin_isLogin) VALUES('18321333019','aaa111',0);
+INSERT INTO hy_userSignIn(signin_phonenumber,signin_pwd,signin_isLogin) VALUES('18321333020','aaa111',0);
+
+
+INSERT INTO hy_userinfo(userinfo_userId,userinfo_nickname,userinfo_sex,userinfo_singleOrdouble,
+                          userinfo_birthday,userinfo_hometown,userinfo_city,userinfo_job,userinfo_heading) 
+                          VALUES (6,'小明6','男','单身','2016-08-08','河北','石家庄','销售',NULL);
+INSERT INTO hy_userinfo(userinfo_userId,userinfo_nickname,userinfo_sex,userinfo_singleOrdouble,
+                          userinfo_birthday,userinfo_hometown,userinfo_city,userinfo_job,userinfo_heading) 
+                          VALUES (7,'小明6','男','单身','2016-08-08','河北','石家庄','销售',NULL);
+INSERT INTO hy_userinfo(userinfo_userId,userinfo_nickname,userinfo_sex,userinfo_singleOrdouble,
+                          userinfo_birthday,userinfo_hometown,userinfo_city,userinfo_job,userinfo_heading) 
+                          VALUES (8,'小明6','男','单身','2016-08-08','河北','石家庄','销售',NULL);
+INSERT INTO hy_userinfo(userinfo_userId,userinfo_nickname,userinfo_sex,userinfo_singleOrdouble,
+                          userinfo_birthday,userinfo_hometown,userinfo_city,userinfo_job,userinfo_heading) 
+                          VALUES (9,'小明6','男','单身','2016-08-08','河北','石家庄','销售',NULL);
+INSERT INTO hy_userinfo(userinfo_userId,userinfo_nickname,userinfo_sex,userinfo_singleOrdouble,
+                          userinfo_birthday,userinfo_hometown,userinfo_city,userinfo_job,userinfo_heading) 
+                          VALUES (10,'小明6','男','单身','2016-08-08','河北','石家庄','销售',NULL);
+INSERT INTO hy_userinfo(userinfo_userId,userinfo_nickname,userinfo_sex,userinfo_singleOrdouble,
+                          userinfo_birthday,userinfo_hometown,userinfo_city,userinfo_job,userinfo_heading) 
+                          VALUES (11,'小明6','男','单身','2016-08-08','河北','石家庄','销售',NULL);
+INSERT INTO hy_userinfo(userinfo_userId,userinfo_nickname,userinfo_sex,userinfo_singleOrdouble,
+                          userinfo_birthday,userinfo_hometown,userinfo_city,userinfo_job,userinfo_heading) 
+                          VALUES (12,'小明6','男','单身','2016-08-08','河北','石家庄','销售',NULL);
+INSERT INTO hy_userinfo(userinfo_userId,userinfo_nickname,userinfo_sex,userinfo_singleOrdouble,
+                          userinfo_birthday,userinfo_hometown,userinfo_city,userinfo_job,userinfo_heading) 
+                          VALUES (13,'小明6','男','单身','2016-08-08','河北','石家庄','销售',NULL);
+INSERT INTO hy_userinfo(userinfo_userId,userinfo_nickname,userinfo_sex,userinfo_singleOrdouble,
+                          userinfo_birthday,userinfo_hometown,userinfo_city,userinfo_job,userinfo_heading) 
+                          VALUES (14,'小明6','男','单身','2016-08-08','河北','石家庄','销售',NULL);
+INSERT INTO hy_userinfo(userinfo_userId,userinfo_nickname,userinfo_sex,userinfo_singleOrdouble,
+                          userinfo_birthday,userinfo_hometown,userinfo_city,userinfo_job,userinfo_heading) 
+                          VALUES (15,'小明6','男','单身','2016-08-08','河北','石家庄','销售',NULL);
+INSERT INTO hy_userinfo(userinfo_userId,userinfo_nickname,userinfo_sex,userinfo_singleOrdouble,
+                          userinfo_birthday,userinfo_hometown,userinfo_city,userinfo_job,userinfo_heading) 
+                          VALUES (16,'小明6','男','单身','2016-08-08','河北','石家庄','销售',NULL);
+INSERT INTO hy_userinfo(userinfo_userId,userinfo_nickname,userinfo_sex,userinfo_singleOrdouble,
+                          userinfo_birthday,userinfo_hometown,userinfo_city,userinfo_job,userinfo_heading) 
+                          VALUES (17,'小明6','男','单身','2016-08-08','河北','石家庄','销售',NULL);
+INSERT INTO hy_userinfo(userinfo_userId,userinfo_nickname,userinfo_sex,userinfo_singleOrdouble,
+                          userinfo_birthday,userinfo_hometown,userinfo_city,userinfo_job,userinfo_heading) 
+                          VALUES (18,'小明6','男','单身','2016-08-08','河北','石家庄','销售',NULL);
+INSERT INTO hy_userinfo(userinfo_userId,userinfo_nickname,userinfo_sex,userinfo_singleOrdouble,
+                          userinfo_birthday,userinfo_hometown,userinfo_city,userinfo_job,userinfo_heading) 
+                          VALUES (19,'小明6','男','单身','2016-08-08','河北','石家庄','销售',NULL);
+INSERT INTO hy_userinfo(userinfo_userId,userinfo_nickname,userinfo_sex,userinfo_singleOrdouble,
+                          userinfo_birthday,userinfo_hometown,userinfo_city,userinfo_job,userinfo_heading) 
+                          VALUES (20,'小明6','男','单身','2016-08-08','河北','石家庄','销售',NULL);
+
+
+
+【http://www.tudou.com/programs/view/0KlgRRVDtD8/】
+【http://www.tudou.com/programs/view/r_t5WII2PTc/】
+【http://v.tudou.com/liuxie/】
+【http://download.csdn.net/detail/glc1230flzt/8388507】
+【http://www.zhangxinxu.com/wordpress/2015/08/css-deep-understand-vertical-align-and-line-height/】
+【http://www.zhangxinxu.com/wordpress/2009/11/css%E8%A1%8C%E9%AB%98line-height%E7%9A%84%E4%B8%80%E4%BA%9B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%8F%8A%E5%BA%94%E7%94%A8/】
+
+
+<ul id="pullrefresh" class="mui-table-view mui-table-view-chevron">
+			<script id="ul-li-template" type="text/html">	
+		  <% for(var i=0;i<list.length;i++){%>				
+				<li id='li<%=list[i].userInfo.user_id %>' class="mui-table-view-cell">
+					<div id="ul-li-divID"  class="mui-slider-cell" style="float: left; width: 88%;">
+						<div class="oa-contact-cell mui-table">
+							<div class="oa-contact-avatar mui-table-cell" style="width: 35%;">
+								<!--<img src="images/60x60.gif" style="width: 60px; height: 60px;" />-->
+								<% if(list[i].userInfo.heading!=""){%>
+								<img src='<%=list[i].userInfo.heading %>' style="width: 60px; height: 60px;" />
+								<%}else{%>
+									<img src="images/60x60.gif" style="width: 60px; height: 60px;" />
+								<%}%>
+							</div>
+							<div class="oa-contact-content mui-table-cell">
+								<div class="mui-clearfix">
+									<h4 class="oa-contact-name"><%=list[i].userInfo.nickname %></h4>
+									<span class="oa-contact-position mui-h6"><%=list[i].userInfo.sex %></span>
+									<span class="oa-contact-position mui-h6"><%=list[i].userInfo.singleOrdouble %></span>
+									<span class="oa-contact-position mui-h6">工程师</span>
+								</div>
+								<p class="oa-contact-email mui-h6">
+									个人宣言：yewenjie@sina.com 
+								</p>
+							</div>							
+						</div>							
+					</div>
+				</li>
+				<%}%>
+			</script>	
+			</ul>
+			
+			
+			
+			1.eclipse:G:\ProgramFiles\Java\eclipse
+2.tomcat: G:\ProgramFiles\Java\apache-tomcat-7.0.68
+3.程序：G:\20160618html5appjava-5\tan.maven.springmvc Maven Webapp
+4.eclipse:window-》Preferences—>java—>Installed JREs 
+  jre home :G:\ProgramFiles\Java\jdk1.7.0_79
+  jre name:jdk1.7.0_79
+  add external jars: G:\ProgramFiles\Java\jdk1.7.0_79\jre\*
+                     G:\ProgramFiles\Java\jdk1.7.0_79\lib\tools.jar
+
+
+http://jingyan.baidu.com/article/597035521d5de28fc00740e6.html
+http://www.tuicool.com/articles/A3Izmi
+http://jingyan.baidu.com/album/f79b7cb35c0f439144023e38.html?picindex=1
+
+
+
+调式：http://ask.dcloud.net.cn/article/69#chromedebug
+http://ask.dcloud.net.cn/question/12368
