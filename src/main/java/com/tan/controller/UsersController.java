@@ -33,15 +33,12 @@ private UserInfoDao userInfoDao;
 
 @RequestMapping(params = "method=testhy")	
 public void testhy(Users user,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException{
-		
-	  System.out.println("java后端测试联通ok");			
+		System.out.println("java后端测试联通ok");			
 	}
 
 	
 @RequestMapping(params = "method=add")	
 public void add(Users user,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException{
-	
-	  
 	System.out.println("连数据库测试iiiiiiii哦哦哦哦哦哦哦bbbbbbbbbbbbbbbbbbbbbbbbbb");
 	  request.setCharacterEncoding("utf-8");  
 	  String headimg = request.getParameter("headimg");
