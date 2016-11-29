@@ -33,10 +33,8 @@ private UserInfoDao userInfoDao;
 
 @RequestMapping(params = "method=testhy")	
 public void testhy(Users user,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException{
-		  
-	  System.out.println("java后端测试联通ok");	
-	 
 		
+	  System.out.println("java后端测试联通ok");			
 	}
 
 	
@@ -49,14 +47,13 @@ public void add(Users user,HttpServletRequest request, HttpServletResponse respo
 	  String headimg = request.getParameter("headimg");
 	  String nickname = URLDecoder.decode(request.getParameter("nickname"),"UTF-8");
 	  String sex = URLDecoder.decode(request.getParameter("sex"),"UTF-8");
-	  String singleOrDouble = request.getParameter("singleOrDouble");
+	  String singleOrDouble = URLDecoder.decode(request.getParameter("singleOrDouble"),"UTF-8");
 	  String birthday = request.getParameter("birthday");
 	  String city = URLDecoder.decode(request.getParameter("city"),"UTF-8");
 	  String job = URLDecoder.decode(request.getParameter("job"),"UTF-8");
 	  String phonenumber = request.getParameter("phonenumber");
 	  String pwd = URLDecoder.decode(request.getParameter("pwd"),"UTF-8");
 	  
-	  System.out.println("祈求不是乱码554："+sex);
 	  
 	  UserSignIn userSignIn=new UserSignIn();
 	  userSignIn.setPhonenumer(phonenumber);
@@ -65,13 +62,7 @@ public void add(Users user,HttpServletRequest request, HttpServletResponse respo
 	  
 	  userSignInDao=new UserSignInDao();
 	  int user_id=userSignInDao.addUserSignIn(userSignIn);
-	  
-	  /*String singleDouble="非单身";
-	  if(singleOrDouble.equals("people_single"))
-	  {
-		  singleDouble="单身";
-	  }*/
-	  
+		  
 	  UserInfo userInfo=new UserInfo();
 	  userInfo.setHeading(headimg);
 	  userInfo.setNickname(nickname);
@@ -91,8 +82,6 @@ public void add(Users user,HttpServletRequest request, HttpServletResponse respo
 	  
 		try {
 			response.getWriter().print(user_id+""); //返回注册时 用户id
-			//response.getWriter().print(userinfoid+"");
-			//response.getWriter().print("ok");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -127,13 +116,7 @@ public void login(Users user,HttpServletRequest request, HttpServletResponse res
 		/*jsonObj.put("username", "张三吖");
 		jsonObj.put("password", "123456");	*/  
 	  
-	  /*
-	  System.out.println("singleOrDouble："+singleOrDouble);
-	  String singleDouble="非单身";
-	  if(singleOrDouble=="people_single")
-	  {
-		  singleDouble="单身";
-	  }
+	  /*	 
 	  UserInfo userInfo=new UserInfo();
 	  userInfo.setHeading(headimg);
 	  userInfo.setNickname(nickname);
@@ -169,28 +152,16 @@ public void login(Users user,HttpServletRequest request, HttpServletResponse res
 @RequestMapping(params = "method=allUsers")	
 public void allUsers(Users user,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException{
 		  
-	  System.out.println("杩炴暟鎹簱娴嬭瘯login");	
+	
 	  request.setCharacterEncoding("utf-8");  
-	  //String phonenumber = request.getParameter("phonenumber");
-	 // String pwd = URLDecoder.decode(request.getParameter("pwd"),"UTF-8");
-	  
-	 // UserSignIn userSignIn=new UserSignIn();
-	 // userSignIn.setPhonenumer(phonenumber);
-	  //userSignIn.setPwd(pwd);
-	  //userSignIn.setIsLogin(1); //1琛ㄧず鐧诲綍 0鏈櫥褰�
 	  userSignInDao=new UserSignInDao();
 	  List<UserSignIn> userslist=userSignInDao.getAllUser();
 	  
 	  response.setContentType("text/html;charset=GBK");
 	  JSONObject jsonObj = new JSONObject();
 	  jsonObj.put("userslist",userslist);	  
-	   
-	
 		
 		try {
-			
-			
-			
 			 System.out.println("获取"+jsonObj.toString());  
 			response.getWriter().print(jsonObj.toString());
 			//response.getWriter().print("ok");
