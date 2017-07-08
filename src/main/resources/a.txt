@@ -1187,8 +1187,7 @@ INSERT INTO hy_userinfo(userinfo_userId,userinfo_nickname,userinfo_sex,userinfo_
 				<%}%>
 			</script>	
 			</ul>
-			
-			
+						
 			
 			1.eclipse:G:\ProgramFiles\Java\eclipse
 2.tomcat: G:\ProgramFiles\Java\apache-tomcat-7.0.68
