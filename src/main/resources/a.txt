@@ -1,7 +1,5 @@
 
 http://www.oschina.net/question/137225_27929
-
-
 var socket;
 var $ = function() {
     return document.getElementById(arguments[0]);
