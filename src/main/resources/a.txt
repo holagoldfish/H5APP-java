@@ -1187,9 +1187,8 @@ INSERT INTO hy_userinfo(userinfo_userId,userinfo_nickname,userinfo_sex,userinfo_
 				<%}%>
 			</script>	
 			</ul>
-						
-			
-			1.eclipse:G:\ProgramFiles\Java\eclipse
+									
+1.eclipse:G:\ProgramFiles\Java\eclipse
 2.tomcat: G:\ProgramFiles\Java\apache-tomcat-7.0.68
 3.程序：G:\20160618html5appjava-5\tan.maven.springmvc Maven Webapp
 4.eclipse:window-》Preferences—>java—>Installed JREs 
@@ -1197,7 +1196,6 @@ INSERT INTO hy_userinfo(userinfo_userId,userinfo_nickname,userinfo_sex,userinfo_
   jre name:jdk1.7.0_79
   add external jars: G:\ProgramFiles\Java\jdk1.7.0_79\jre\*
                      G:\ProgramFiles\Java\jdk1.7.0_79\lib\tools.jar
-
 
 http://jingyan.baidu.com/article/597035521d5de28fc00740e6.html
 http://www.tuicool.com/articles/A3Izmi
